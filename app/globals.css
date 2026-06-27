@@ -1,26 +1,129 @@
 @import "tailwindcss";
 
+@theme {
+  /* Design System Colors */
+  --color-bg-primary: #090909;
+  --color-bg-secondary: #111111;
+  --color-card-bg: #171717;
+  --color-gold: #D4AF37;
+  --color-gold-light: #E6C567;
+  --color-gold-glow: rgba(212, 175, 55, 0.15);
+  --color-typography: #F5F5F5;
+  --color-gray-text: #9E9E9E;
+
+  /* Custom Typography System */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-arabic: var(--font-ibm-plex-arabic), system-ui, sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-sans: var(--font-inter);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[lang="ar"] {
+  --font-sans: var(--font-ibm-plex-arabic);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #090909;
+  color: #F5F5F5;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #090909;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #171717;
+  border: 1px solid #D4AF37/20;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D4AF37/30;
+}
+
+/* Premium Marble & Dark Gradients */
+.bg-marble-gradient {
+  background: radial-gradient(circle at 50% 50%, #171717 0%, #111111 50%, #090909 100%);
+}
+
+.bg-gold-metallic {
+  background: linear-gradient(135deg, #D4AF37 0%, #F3E5AB 30%, #E6C567 70%, #996515 100%);
+}
+
+.text-gold-gradient {
+  background: linear-gradient(135deg, #D4AF37 0%, #E6C567 50%, #996515 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Glow Elements & Borders */
+.border-gold-glow {
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.03);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.border-gold-glow:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.12);
+}
+
+/* Luxury Light Beam Effects */
+.light-shaft {
+  position: absolute;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(212, 175, 55, 0.15) 50%, transparent);
+  filter: blur(1px);
+  pointer-events: none;
+}
+
+/* Floating Animation Keyframes */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(0.5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes pulseGlow {
+  0% { opacity: 0.1; }
+  50% { opacity: 0.25; }
+  100% { opacity: 0.1; }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* Lenis CSS integration */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }

@@ -1,0 +1,243 @@
+{
+  "Common": {
+    "title": "Diwan Al Maany | Premium Legal Translation & Services",
+    "tagline": "Certified Legal Authority",
+    "whatsapp": "WhatsApp Us",
+    "contactUs": "Contact Us",
+    "requestQuote": "Request a Quote",
+    "explore": "Explore Services",
+    "learnMore": "Learn More",
+    "admin": "Admin Panel",
+    "home": "Home",
+    "backToHome": "Back to Home",
+    "allRightsReserved": "All rights reserved.",
+    "selectLanguage": "Select Language"
+  },
+  "Hero": {
+    "titleLine1": "Precision in Law",
+    "titleLine2": "Authority in Translation",
+    "subtitle": "Certified legal translation and corporate advisory services crafted for prestigious international organizations, sovereign entities, and elite law firms. Where linguistic precision meets absolute legal authority.",
+    "scrollDown": "Scroll to Begin"
+  },
+  "About": {
+    "title": "Our Heritage",
+    "subtitle": "Chronicles of Trust & Prestigious Service",
+    "storyTitle": "Linguistic Precision Forged in Legal Excellence",
+    "storyParagraph1": "Established at the crossroads of legal tradition and modern commerce, Diwan Al Maany stands as the premier architectural force in Arabic and international legal translation. We do not merely translate words; we transpose legal gravity, preserve judicial intent, and bridge sovereign jurisdictions with meticulous accuracy.",
+    "storyParagraph2": "Our legacy is built on the pillars of absolute confidentiality, unmatched linguistic mastery, and deep-seated legal expertise. From complex multilateral contracts to state-level treaty documentations, our work carries the official seal of certified authority accepted by embassies, courts, and ministries worldwide.",
+    "timeline": {
+      "2010": {
+        "title": "Foundation of Excellence",
+        "description": "Diwan Al Maany was established in Cairo to provide high-end legal translation services for elite domestic firms."
+      },
+      "2015": {
+        "title": "Embassy Certification",
+        "description": "Achieved official accreditation from major European and international embassies, expanding global legal reach."
+      },
+      "2020": {
+        "title": "Digital Transformation & AI integration",
+        "description": "Launched secure AI-assisted translation glossaries, combining human expertise with cryptographic security."
+      },
+      "2024": {
+        "title": "Pan-Arab Regional Expansion",
+        "description": "Opened dedicated corporate translation hubs in Dubai and Riyadh, servicing sovereign wealth funds."
+      },
+      "2026": {
+        "title": "The Golden Seal Initiative",
+        "description": "Setting the benchmark for premium digital legal workflows, ensuring next-day certified legal delivery."
+      }
+    }
+  },
+  "Services": {
+    "title": "Core Specializations",
+    "subtitle": "Tailored Judicial & Corporate Translations",
+    "cta": "Inquire About Service",
+    "list": {
+      "legal": {
+        "title": "Certified Legal Translation",
+        "description": "Official translation of court deeds, power of attorney, certificates, and affidavits, authenticated and signed by certified translators for immediate government acceptance."
+      },
+      "court": {
+        "title": "Court & Litigation Support",
+        "description": "Comprehensive translation of litigation files, case dossiers, witness statements, and court transcripts with absolute semantic fidelity for judicial proceedings."
+      },
+      "corporate": {
+        "title": "Corporate & Financial Services",
+        "description": "Structuring elite bilingual corporate articles of association, shareholder agreements, mergers, acquisitions, and compliance documentation for global corporations."
+      },
+      "contracts": {
+        "title": "Contract & Treaty Translation",
+        "description": "Meticulous legal transposition of commercial agreements, intellectual property covenants, and international sovereign treaties where every comma defines liability."
+      },
+      "embassy": {
+        "title": "Embassy & Diplomatic Services",
+        "description": "Certified embassy-ready translations for visa documentations, immigration files, and diplomatic correspondence conforming strictly to international consular standards."
+      },
+      "consultation": {
+        "title": "Legal Document Review",
+        "description": "High-end cross-border legal checks, terminology matching, and bilingual document review by seasoned legal experts to eliminate exposure and risk."
+      }
+    }
+  },
+  "WhyChooseUs": {
+    "title": "The Standards",
+    "subtitle": "Quantified Indicators of Legal Authority",
+    "stats": {
+      "experience": {
+        "value": "15+",
+        "label": "Years of Authority"
+      },
+      "accuracy": {
+        "value": "99.98%",
+        "label": "Semantic Precision"
+      },
+      "translators": {
+        "value": "45+",
+        "label": "Sworn Legal Experts"
+      },
+      "countries": {
+        "value": "30+",
+        "label": "Jurisdictions Served"
+      },
+      "projects": {
+        "value": "120K+",
+        "label": "Certified Documents"
+      }
+    }
+  },
+  "WorkProcess": {
+    "title": "The Protocol",
+    "subtitle": "Our Meticulous Workflow",
+    "steps": {
+      "step1": {
+        "name": "Consultation",
+        "title": "1. Secure Intake & Consultation",
+        "description": "We establish a secure communication channel to receive your sensitive legal files under standard NDAs. Our legal coordinators evaluate the jurisdictional context."
+      },
+      "step2": {
+        "name": "Document Review",
+        "title": "2. Linguistic & Structural Review",
+        "description": "Senior legal experts review the structural syntax, terms of art, and complex clauses of the document to allocate the correct linguistic specialist."
+      },
+      "step3": {
+        "name": "Quotation",
+        "title": "3. Bespoke Valuation",
+        "description": "We provide a transparent, detailed scope of work, outlining delivery timelines, translation tiers, certification stamps, and secure delivery logistics."
+      },
+      "step4": {
+        "name": "Translation",
+        "title": "4. Sworn Legal Translation",
+        "description": "Your document is translated by a certified court translator who specializes in the specific legal domain (corporate, litigation, maritime, or criminal)."
+      },
+      "step5": {
+        "name": "Quality Assurance",
+        "title": "5. Dual-Verification QA",
+        "description": "A second senior legal translation auditor cross-compares the text word-for-word against the source, checking names, dates, financial figures, and legal terms."
+      },
+      "step6": {
+        "name": "Certification",
+        "title": "6. Official Seal & Certification",
+        "description": "The document receives the Diwan Al Maany Gold Seal of Authenticity and is signed by our sworn certified translator, making it legally binding."
+      },
+      "step7": {
+        "name": "Delivery",
+        "title": "7. Secure Courier & Digital Release",
+        "description": "We dispatch the physical certified documents via secure courier and release encrypted, digitally signed PDF copies directly to your legal team."
+      }
+    }
+  },
+  "Languages": {
+    "title": "Global Reach",
+    "subtitle": "Bridging International Jurisdictions",
+    "description": "We support dynamic translations across 30+ language pairs, directly aligning with diplomatic and trade missions worldwide.",
+    "ar": "Arabic",
+    "en": "English",
+    "fr": "French",
+    "de": "German",
+    "es": "Spanish",
+    "zh": "Chinese",
+    "ru": "Russian",
+    "it": "Italian"
+  },
+  "AiTech": {
+    "title": "Future of Law",
+    "subtitle": "Augmented Intelligence, Absolute Precision",
+    "description": "We harness advanced AI models trained specifically on bilingual legal archives to accelerate drafts and ensure terminology consistency. Every automated stage is audited and perfected by human sworn experts.",
+    "card1": {
+      "title": "Neural Legal Glossaries",
+      "description": "Real-time database linking regional legal terminology across civil, common, and sharia law structures, updated dynamically by our legal council."
+    },
+    "card2": {
+      "title": "Cryptographic Integrity",
+      "description": "All legal documents undergo SHA-256 verification, ensuring that the certified translation remains untampered and verifiable."
+    },
+    "card3": {
+      "title": "Automated Formatting Preservation",
+      "description": "Bespoke parsers retain the exact visual styling, official seals, and signatures of the original court file in the translated output."
+    }
+  },
+  "Testimonials": {
+    "title": "The Endorsements",
+    "subtitle": "Words from Sovereign Partners & Top-Tier Counsel",
+    "quote1": {
+      "quote": "Diwan Al Maany is our exclusive partner for international commercial arbitration files. Their speed and legal precision are unmatched in the Middle East.",
+      "author": "Dr. Tariq Al-Mansoor",
+      "position": "Senior Partner, Al-Mansoor & Partners Litigation"
+    },
+    "quote2": {
+      "quote": "The certified translation of our merger contracts was accepted by the Ministry without a single note. An absolute masterclass in legal translation.",
+      "author": "Victoria Sterling",
+      "position": "General Counsel, Sterling Capital Holdings"
+    },
+    "quote3": {
+      "quote": "In diplomatic translation, there is no margin for error. Diwan Al Maany delivers museum-grade accuracy and executive discretion on every assignment.",
+      "author": "Ambassador H.E. Youssef Kamal",
+      "position": "Ministry of Foreign Affairs (Retired)"
+    }
+  },
+  "Articles": {
+    "title": "Insights & Law",
+    "subtitle": "The Diwan Legal Knowledge Base",
+    "readMore": "Read Article",
+    "art1": {
+      "title": "Translating Commercial Arbitration Clauses: Civil vs Common Law",
+      "summary": "An in-depth analysis of how minor phrasing differences in translation can shift liability in international commercial disputes.",
+      "content": "Full article content will load dynamically from our custom headless CMS. This details civil vs common law translations..."
+    },
+    "art2": {
+      "title": "The Legality of Digital Stamps in Embassy Documentations",
+      "summary": "Exploring the evolving standards of consular authentication and how the Diwan Digital Gold Seal matches embassy criteria.",
+      "content": "Exploring legal criteria for digital seals across Schengen and GCC countries..."
+    },
+    "art3": {
+      "title": "Key Terminology Pitfalls in Bilingual Articles of Association",
+      "summary": "A guide for corporate counsels on avoiding ambiguities when localizing founding contracts for LLCs in the GCC region.",
+      "content": "A guide for corporate counsels on localized translation guidelines..."
+    }
+  },
+  "Contact": {
+    "title": "Initiate Protocol",
+    "subtitle": "Establish Connection with Our Legal Officers",
+    "form": {
+      "name": "Full Name / Organization",
+      "email": "Official Email Address",
+      "phone": "Phone Number (with Country Code)",
+      "service": "Select Requested Service",
+      "message": "Project Details & Confidential Notes",
+      "submit": "Submit Secure Request",
+      "submitting": "Processing Request...",
+      "success": "Your request has been logged. A legal coordinator will contact you via secure channel within 2 hours.",
+      "error": "Error logging request. Please verify inputs or message us on WhatsApp."
+    },
+    "info": {
+      "addressTitle": "Headquarters",
+      "address": "40 Nile Corniche, Maadi, Cairo, Egypt",
+      "branchTitle": "Gulf Executive Hub",
+      "branch": "The Gate District, East Wing, DIFC, Dubai, UAE",
+      "phone": "+20 2 2768 0000",
+      "email": "counsel@diwanalmaany.com",
+      "hoursTitle": "Service Hours",
+      "hours": "Sunday - Thursday: 08:00 - 18:00 (GMT+2) \nEmergency Hotline available 24/7 for active arbitration support."
+    }
+  }
+}
