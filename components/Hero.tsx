@@ -332,7 +332,7 @@ export default function Hero() {
         </div>
 
         {/* Asymmetrical Column Grid Layout */}
-        <div className="max-w-[1440px] w-full mx-auto px-8 md:px-[80px] grid grid-cols-1 md:grid-cols-12 gap-12 items-center z-20 relative">
+        <div className="max-w-[1440px] w-full mx-auto px-6 md:px-[80px] grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-center z-20 relative pt-20 md:pt-0">
           
           {/* Left Column: Editorial & Paragraph (Route-isolated active language) */}
           <div 
@@ -348,14 +348,14 @@ export default function Hero() {
             </div>
 
             {/* Display Title - Serif Font with clip-mask Line reveals */}
-            <h1 className="text-egyptian-heading text-4xl sm:text-5xl md:text-6xl text-[#E8E4DC] tracking-tight leading-[1.05] mb-6">
-              <span className="inline-block overflow-hidden block">
+            <h1 className="text-egyptian-heading text-[2.5rem] leading-[1.1] sm:text-5xl md:text-6xl text-[#E8E4DC] tracking-tight md:leading-[1.05] mb-4 md:mb-6">
+              <span className="block overflow-hidden">
                 <span className="title-reveal-line block origin-left">
                   {t('titleLine1')}
                 </span>
               </span>
               <br />
-              <span className="inline-block overflow-hidden block">
+              <span className="block overflow-hidden">
                 {/* ── UPGRADE: shimmer sweep on the gold accent line ── */}
                 <span className="title-reveal-line text-shimmer-slow font-light block origin-left">
                   {t('titleLine2')}
@@ -369,10 +369,10 @@ export default function Hero() {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex items-center gap-6 intro-fade-item">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 intro-fade-item">
               <Link
                 href="/#contact"
-                className="group relative flex items-center justify-center gap-3 px-8 py-3.5 border border-[#C5A880]/80 text-[#C5A880] text-xs font-semibold uppercase tracking-widest rounded-full overflow-hidden hover:shadow-[0_4px_24px_rgba(197,168,128,0.15)] hover:-translate-y-0.5 transition-all duration-300 hover:bg-[#C5A880]/5"
+                className="group relative flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-3.5 border border-[#C5A880]/80 text-[#C5A880] text-[10px] sm:text-xs font-semibold uppercase tracking-widest rounded-full overflow-hidden hover:shadow-[0_4px_24px_rgba(197,168,128,0.15)] hover:-translate-y-0.5 transition-all duration-300 hover:bg-[#C5A880]/5"
               >
                 <span>{tCommon('requestQuote')}</span>
                 <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -380,7 +380,7 @@ export default function Hero() {
 
               <Link
                 href="/#services"
-                className="group flex items-center justify-center gap-2 text-[#E8E4DC]/80 hover:text-[#C5A880] text-xs font-semibold uppercase tracking-widest transition-colors duration-300"
+                className="group flex items-center justify-center gap-2 text-[#E8E4DC]/80 hover:text-[#C5A880] text-[10px] sm:text-xs font-semibold uppercase tracking-widest transition-colors duration-300"
               >
                 <span>{tCommon('explore')}</span>
                 <span className="block w-1.5 h-1.5 rounded-full bg-[#C5A880] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -390,11 +390,11 @@ export default function Hero() {
 
           {/* Right Column: WebGL Scale of Justice (Occupies 5 columns) */}
           <div 
-            className="col-span-12 md:col-span-5 flex justify-center items-center relative min-h-[350px] md:min-h-[480px] z-10"
+            className="col-span-12 md:col-span-5 flex justify-center items-center relative min-h-[250px] md:min-h-[480px] z-10"
           >
             <div
               ref={sealContainerRef}
-              className="w-full max-w-[460px] h-[300px] md:h-[440px] relative"
+              className="w-full max-w-[460px] h-[250px] md:h-[440px] relative"
             >
               <div
                 id="seal-hover-wrapper"
