@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/lib/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Globe, Shield } from 'lucide-react';
+import { Menu, X, Globe } from 'lucide-react';
+import gsap from 'gsap';
 
 interface NavbarProps {
   locale: string;
@@ -16,13 +17,59 @@ export default function Navbar({ locale }: NavbarProps) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const navbarRef = useRef<HTMLDivElement>(null);
+  const borderLineRef = useRef<HTMLDivElement>(null);
+  const linksContainerRef = useRef<HTMLDivElement>(null);
 
+  // Monitor scroll for glass background activation
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 50);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Listen for the Vault Opened loading screen completion event to play intro animation
+  useEffect(() => {
+    const playIntro = () => {
+      const tl = gsap.timeline();
+
+      // Ensure elements start hidden/contracted
+      gsap.set(borderLineRef.current, { scaleX: 0, transformOrigin: 'center' });
+      gsap.set('.nav-anim-item', { opacity: 0, y: -10 });
+
+      // Border bottom draws center-out
+      tl.to(borderLineRef.current, {
+        scaleX: 1,
+        duration: 1.2,
+        ease: 'power3.inOut',
+        delay: 0.2,
+      });
+
+      // Nav items stagger fade-in and slide down
+      tl.to(
+        '.nav-anim-item',
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.05,
+          ease: 'power2.out',
+        },
+        '-=0.8'
+      );
+    };
+
+    // If loaded immediately, play, otherwise wait for event
+    window.addEventListener('vault-opened', playIntro);
+    
+    // In case the loader is already bypassed
+    if (document.body.style.overflow !== 'hidden') {
+      playIntro();
+    }
+
+    return () => window.removeEventListener('vault-opened', playIntro);
   }, []);
 
   const toggleLanguage = () => {
@@ -30,144 +77,179 @@ export default function Navbar({ locale }: NavbarProps) {
     router.replace(pathname, { locale: nextLocale });
   };
 
-  const navLinks = [
-    { href: '/#about', labelKey: 'About.title', translationKey: 'About' },
-    { href: '/#services', labelKey: 'Services.title', translationKey: 'Services' },
-    { href: '/#process', labelKey: 'WorkProcess.title', translationKey: 'WorkProcess' },
-    { href: '/#tech', labelKey: 'AiTech.title', translationKey: 'AiTech' },
-    { href: '/#contact', labelKey: 'Contact.title', translationKey: 'Contact' },
+  const leftLinks = [
+    { href: '/#services', labelKey: 'Services.title' },
+    { href: '/#about', labelKey: 'About.title' },
   ];
 
-  // Helper translations for section headers (fall back if not fully defined in Common)
+  const rightLinks = [
+    { href: '/#process', labelKey: 'WorkProcess.title' },
+    { href: '/#contact', labelKey: 'Contact.title' },
+  ];
+
   const menuTranslations = useTranslations();
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled 
-          ? 'bg-[#090909]/80 backdrop-blur-md border-b border-[#D4AF37]/20 py-4 shadow-[0_4px_30px_rgba(0,0,0,0.8)]' 
+      ref={navbarRef}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ${
+        scrolled
+          ? 'bg-[#050506]/94 backdrop-blur-xl py-4 shadow-[0_4px_40px_rgba(0,0,0,0.8),0_0_0_0_rgba(197,168,128,0),inset_0_-1px_0_rgba(197,168,128,0.08)]'
           : 'bg-transparent py-6'
       }`}
+      role="navigation"
+      aria-label="Main navigation"
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+      {/* Symmetrical Split Layout Grid */}
+      <div className="max-w-[1440px] mx-auto px-8 lg:px-[80px] flex items-center justify-between relative">
         
-        {/* LOGO */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative flex items-center justify-center w-10 h-10 border border-[#D4AF37] rounded-full overflow-hidden bg-[#111111] transition-transform duration-500 group-hover:rotate-[360deg]">
-            <Shield className="w-5 h-5 text-[#D4AF37]" />
-            <div className="absolute inset-0 bg-[#D4AF37]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-lg font-bold tracking-widest text-[#F5F5F5] group-hover:text-[#D4AF37] transition-colors duration-300">
-              {locale === 'ar' ? 'ديوان المعاني' : 'DIWAN AL MAANY'}
-            </span>
-            <span className="text-[9px] tracking-[0.2em] text-[#9E9E9E] uppercase">
-              {t('tagline')}
-            </span>
-          </div>
-        </Link>
-
-        {/* DESKTOP NAV LINKS */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium tracking-wide text-[#9E9E9E] hover:text-[#D4AF37] transition-all duration-300 relative py-1 group"
-            >
-              {menuTranslations(link.labelKey)}
-              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#D4AF37] group-hover:w-full transition-all duration-300" />
-            </Link>
-          ))}
-        </nav>
-
-        {/* CTA & LANG SELECTOR */}
-        <div className="hidden md:flex items-center gap-6">
-          {/* Lang toggle */}
+        {/* DESKTOP LEFT LINKS + LANGUAGE SWITCHER */}
+        <div className="hidden lg:flex items-center gap-8 flex-1 nav-anim-item">
+          {/* Rosetta Language switcher */}
           <button
             onClick={toggleLanguage}
-            className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#9E9E9E] hover:text-[#D4AF37] transition-colors duration-300 cursor-pointer"
+            className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#9A9590] hover:text-[#C5A880] transition-colors duration-300 cursor-pointer mr-4"
           >
             <Globe className="w-4 h-4" />
             <span>{locale === 'en' ? 'العربية' : 'EN'}</span>
           </button>
 
-          {/* Admin link */}
-          <Link
-            href="/admin"
-            className="text-xs text-[#9E9E9E] hover:text-[#D4AF37] transition-colors"
-          >
-            {t('admin')}
-          </Link>
+          {leftLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-xs font-semibold uppercase tracking-widest text-[#9A9590] hover:text-[#E8E4DC] transition-all duration-300 relative py-1 group"
+            >
+              {menuTranslations(link.labelKey)}
+              <span className="absolute bottom-0 left-1/2 w-0 h-[0.5px] bg-[#C5A880] group-hover:w-full group-hover:left-0 transition-all duration-300" />
+            </Link>
+          ))}
+        </div>
 
-          {/* Golden CTA */}
+        {/* CENTER DOCK TARGET (Empty gold guidelines for WebGL Seal docking) */}
+        <div className="flex items-center justify-center z-50 nav-anim-item px-4">
+          <Link href="/#top" id="navbar-dock-target" className="w-12 h-12 flex items-center justify-center relative group" aria-label="Return to top">
+            {/* Ambient rest ring visual target */}
+            <div className="absolute inset-0 rounded-full border border-[#C5A880]/15 scale-95 transition-all duration-500 group-hover:scale-105 group-hover:border-[#C5A880]/40" />
+            <div className="absolute w-1.5 h-1.5 rounded-full bg-[#C5A880]/30 group-hover:bg-[#C5A880] transition-colors duration-300" />
+          </Link>
+        </div>
+
+        {/* DESKTOP RIGHT LINKS + CTA BUTTON */}
+        <div className="hidden lg:flex items-center justify-end gap-8 flex-1 nav-anim-item">
+          {rightLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-xs font-semibold uppercase tracking-widest text-[#9A9590] hover:text-[#E8E4DC] transition-all duration-300 relative py-1 group"
+            >
+              {menuTranslations(link.labelKey)}
+              <span className="absolute bottom-0 left-1/2 w-0 h-[0.5px] bg-[#C5A880] group-hover:w-full group-hover:left-0 transition-all duration-300" />
+            </Link>
+          ))}
+
+          {/* Golden CTA Button */}
           <Link
             href="/#contact"
-            className="px-5 py-2.5 bg-gradient-to-r from-[#D4AF37] to-[#E6C567] text-[#090909] text-xs font-semibold tracking-wider uppercase rounded-sm hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all duration-300 transform hover:-translate-y-0.5"
+            className="px-6 py-2.5 border border-[#C5A880]/70 text-[#C5A880] hover:bg-[#C5A880]/5 text-xs font-semibold uppercase tracking-widest rounded-full transition-all duration-300 hover:shadow-[0_4px_24px_rgba(197,168,128,0.1)] hover:-translate-y-0.5 cursor-pointer ml-4"
           >
             {t('requestQuote')}
           </Link>
         </div>
 
-        {/* MOBILE TOGGLE */}
-        <div className="flex items-center gap-4 md:hidden">
-          <button
-            onClick={toggleLanguage}
-            className="text-[#9E9E9E] hover:text-[#D4AF37] transition-colors p-1"
-          >
-            <Globe className="w-5 h-5" />
-          </button>
-          
+        {/* MOBILE NAVIGATION TRIGGERS */}
+        <div className="flex items-center justify-between w-full lg:hidden z-50">
+          {/* Hamburger (Left) */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="text-[#F5F5F5] hover:text-[#D4AF37] transition-colors p-1"
+            className="text-[#E8E4DC] hover:text-[#C5A880] transition-colors p-2"
+            aria-label="Toggle menu"
+            aria-expanded={isOpen}
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
+
+          {/* Language Switcher (Right) */}
+          <button
+            onClick={toggleLanguage}
+            className="text-[#9A9590] hover:text-[#C5A880] transition-colors p-2"
+            aria-label="Toggle language"
+          >
+            <Globe className="w-5 h-5" />
+          </button>
         </div>
+
       </div>
 
-      {/* MOBILE DRAWER */}
+      {/* GSAP Bottom Filament Divider Line — upgraded to gradient glow */}
+      <div 
+        ref={borderLineRef}
+        className="absolute bottom-0 left-0 right-0 h-[1px] scale-x-0"
+        style={{
+          background: 'linear-gradient(90deg, transparent 0%, rgba(197,168,128,0.04) 20%, rgba(197,168,128,0.2) 50%, rgba(197,168,128,0.04) 80%, transparent 100%)',
+          boxShadow: scrolled ? '0 0 12px rgba(197,168,128,0.08)' : 'none',
+        }}
+      />
+
+      {/* MOBILE DRAWER (Full-screen Overlay Menu) */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-[#111111] border-b border-[#D4AF37]/20 overflow-hidden"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 top-0 left-0 w-full h-screen bg-[#050506]/98 backdrop-blur-xl z-40 lg:hidden flex flex-col justify-center px-8"
           >
-            <div className="px-6 py-8 flex flex-col gap-6">
-              {navLinks.map((link) => (
-                <Link
+            <div className="flex flex-col gap-8 text-center">
+              {[...leftLinks, ...rightLinks].map((link, idx) => (
+                <motion.div
                   key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="text-base font-semibold tracking-wide text-[#F5F5F5] hover:text-[#D4AF37] transition-colors"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 + idx * 0.05 }}
                 >
-                  {menuTranslations(link.labelKey)}
-                </Link>
+                  <Link
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="font-serif text-3xl text-[#E8E4DC] hover:text-[#C5A880] transition-colors py-2 block"
+                  >
+                    {menuTranslations(link.labelKey)}
+                  </Link>
+                </motion.div>
               ))}
 
-              <div className="h-[1px] bg-[#9E9E9E]/20 my-2" />
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="h-[1px] bg-[#7A6B55]/15 my-4"
+              />
 
-              <div className="flex flex-col gap-4">
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+                className="flex flex-col gap-6 items-center"
+              >
+                {/* Admin Access link */}
                 <Link
                   href="/admin"
                   onClick={() => setIsOpen(false)}
-                  className="text-sm text-[#9E9E9E] hover:text-[#D4AF37]"
+                  className="text-xs font-semibold tracking-widest uppercase text-[#9A9590] hover:text-[#C5A880]"
                 >
                   {t('admin')}
                 </Link>
-                
+
+                {/* Primary Mobile CTA */}
                 <Link
                   href="/#contact"
                   onClick={() => setIsOpen(false)}
-                  className="w-full text-center py-3 bg-gradient-to-r from-[#D4AF37] to-[#E6C567] text-[#090909] text-sm font-semibold rounded-sm tracking-wide"
+                  className="w-full max-w-[280px] py-4 border border-[#C5A880] text-[#C5A880] text-xs font-semibold uppercase tracking-widest rounded-full"
                 >
                   {t('requestQuote')}
                 </Link>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         )}

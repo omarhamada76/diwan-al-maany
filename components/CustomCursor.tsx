@@ -12,8 +12,8 @@ export default function CustomCursor() {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  // Smooth springs to add physics lag
-  const springConfig = { damping: 40, stiffness: 400, mass: 0.4 };
+  // Smooth springs to add physics lag (waftable responsive tracking)
+  const springConfig = { damping: 35, stiffness: 450, mass: 0.35 };
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
@@ -24,19 +24,14 @@ export default function CustomCursor() {
       if (!visible) setVisible(true);
     };
 
-    const handleMouseLeave = () => {
-      setVisible(false);
-    };
-
-    const handleMouseEnter = () => {
-      setVisible(true);
-    };
+    const handleMouseLeave = () => setVisible(false);
+    const handleMouseEnter = () => setVisible(true);
 
     window.addEventListener('mousemove', moveCursor);
     document.addEventListener('mouseleave', handleMouseLeave);
     document.addEventListener('mouseenter', handleMouseEnter);
 
-    // Track hoverable elements
+    // Monitor hoverable interactive nodes
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const isHoverable = 
@@ -70,37 +65,20 @@ export default function CustomCursor() {
   if (!visible) return null;
 
   return (
-    <>
-      {/* Outer Glow ring */}
-      <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-[#D4AF37] pointer-events-none z-[9999] mix-blend-difference hidden md:block"
-        style={{
-          x: cursorXSpring,
-          y: cursorYSpring,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-        animate={{
-          scale: hovered ? 1.8 : 1,
-          backgroundColor: hovered ? 'rgba(212, 175, 55, 0.1)' : 'rgba(212, 175, 55, 0)',
-          borderColor: click ? '#E6C567' : '#D4AF37',
-        }}
-        transition={{ type: 'tween', duration: 0.15 }}
-      />
-      {/* Inner Dot */}
-      <motion.div
-        className="fixed top-0 left-0 w-2.5 h-2.5 bg-[#D4AF37] rounded-full pointer-events-none z-[9999] mix-blend-difference hidden md:block"
-        style={{
-          x: cursorX,
-          y: cursorY,
-          translateX: '-50%',
-          translateY: '-50%',
-        }}
-        animate={{
-          scale: hovered ? 0.6 : 1,
-        }}
-        transition={{ type: 'tween', duration: 0.1 }}
-      />
-    </>
+    <motion.div
+      className="fixed top-0 left-0 w-2 h-2 bg-[#C5A880] rounded-full pointer-events-none z-[9999] mix-blend-difference hidden md:block"
+      style={{
+        x: cursorXSpring,
+        y: cursorYSpring,
+        translateX: '-50%',
+        translateY: '-50%',
+      }}
+      animate={{
+        scale: hovered ? 4.0 : 1,
+        backgroundColor: hovered ? 'rgba(197, 168, 128, 0.05)' : '#C5A880',
+        border: hovered ? '0.5px solid #C5A880' : '0px solid transparent',
+      }}
+      transition={{ type: 'tween', duration: 0.15, ease: 'easeOut' }}
+    />
   );
 }

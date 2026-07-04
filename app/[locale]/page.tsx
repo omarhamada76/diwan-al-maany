@@ -2,13 +2,15 @@ import { setRequestLocale } from 'next-intl/server';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
 import Services from '@/components/Services';
-import WhyChooseUs from '@/components/WhyChooseUs';
-import WorkProcess from '@/components/WorkProcess';
-import Languages from '@/components/Languages';
-import AiTech from '@/components/AiTech';
-import Testimonials from '@/components/Testimonials';
-import Articles from '@/components/Articles';
-import Cta from '@/components/Cta';
+import dynamic from 'next/dynamic';
+
+const WhyChooseUs = dynamic(() => import('@/components/WhyChooseUs'));
+const WorkProcess = dynamic(() => import('@/components/WorkProcess'));
+const Languages = dynamic(() => import('@/components/Languages'));
+const AiTech = dynamic(() => import('@/components/AiTech'));
+const Testimonials = dynamic(() => import('@/components/Testimonials'));
+const Articles = dynamic(() => import('@/components/Articles'));
+const Cta = dynamic(() => import('@/components/Cta'));
 
 interface PageProps {
   params: Promise<{ locale: string }>;

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { CompanyInfo, ServiceItem, ArticleItem, TestimonialItem, getCMSData, publishCMSData } from '@/lib/cms';
+import { CompanyInfo, ServiceItem, ArticleItem, TestimonialItem, getCMSData, publishCMSData, initialCompanyInfo, initialServices, initialArticles, initialTestimonials } from '@/lib/cms';
 
 interface CmsContextType {
   companyInfo: CompanyInfo;
@@ -19,12 +19,15 @@ interface CmsContextType {
 const CmsContext = createContext<CmsContextType | undefined>(undefined);
 
 export function CmsProvider({ children }: { children: React.ReactNode }) {
-  const [companyInfo, setCompanyInfo] = useState<CompanyInfo | null>(null);
-  const [services, setServices] = useState<ServiceItem[]>([]);
-  const [articles, setArticles] = useState<ArticleItem[]>([]);
-  const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
+  // Initialize directly with defaults so we never block rendering with a null state.
+  // getCMSData() is safe to call on the server (returns initialCompanyInfo) and
+  // on the client (reads localStorage, falls back to initialCompanyInfo).
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfo>(initialCompanyInfo);
+  const [services, setServices] = useState<ServiceItem[]>(initialServices);
+  const [articles, setArticles] = useState<ArticleItem[]>(initialArticles);
+  const [testimonials, setTestimonials] = useState<TestimonialItem[]>(initialTestimonials);
 
-  // Load CMS data on mount
+  // Hydrate from localStorage on the client after first render
   useEffect(() => {
     const data = getCMSData();
     setCompanyInfo(data.companyInfo);
@@ -60,18 +63,6 @@ export function CmsProvider({ children }: { children: React.ReactNode }) {
     setArticles(data.articles);
     setTestimonials(data.testimonials);
   };
-
-  // Prevent rendering children until CMS state is hydrated from localStorage (client-side)
-  if (!companyInfo) {
-    return (
-      <div className="fixed inset-0 bg-[#090909] flex items-center justify-center z-[99999]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
-          <span className="text-xs text-[#D4AF37] tracking-[0.2em] uppercase">DIWAN AL MAANY</span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <CmsContext.Provider

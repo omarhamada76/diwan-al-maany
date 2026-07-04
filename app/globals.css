@@ -2,31 +2,41 @@
 
 @theme {
   /* Design System Colors */
-  --color-bg-primary: #090909;
-  --color-bg-secondary: #111111;
-  --color-card-bg: #171717;
-  --color-gold: #D4AF37;
-  --color-gold-light: #E6C567;
-  --color-gold-glow: rgba(212, 175, 55, 0.15);
-  --color-typography: #F5F5F5;
-  --color-gray-text: #9E9E9E;
+  --color-bg-primary: #050506;
+  --color-bg-secondary: #09090A;
+  --color-card-bg: #0F0F11;
+  --color-gold: #C5A880;
+  --color-gold-light: #D4B896;
+  --color-gold-glow: rgba(197, 168, 128, 0.15);
+  --color-lapis: #26619c;
+  --color-lapis-dark: #123354;
+  --color-lapis-glow: rgba(38, 97, 156, 0.15);
+  --color-typography: #E8E4DC;
+  --color-gray-text: #9A9590;
 
   /* Custom Typography System */
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-arabic: var(--font-ibm-plex-arabic), system-ui, sans-serif;
+  --font-heading: var(--font-heading-base), serif;
 }
 
 :root {
+  --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-ibm-plex-arabic: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  --font-cinzel: 'Cinzel', serif;
+  --font-amiri: 'Amiri', serif;
   --font-sans: var(--font-inter);
+  --font-heading-base: var(--font-cinzel);
 }
 
 [lang="ar"] {
   --font-sans: var(--font-ibm-plex-arabic);
+  --font-heading-base: var(--font-amiri);
 }
 
 body {
-  background-color: #090909;
-  color: #F5F5F5;
+  background-color: #050506;
+  color: #E8E4DC;
   overflow-x: hidden;
   font-family: var(--font-sans);
 }
@@ -37,54 +47,86 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #090909;
+  background: #050506;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #171717;
-  border: 1px solid #D4AF37/20;
+  background: linear-gradient(to bottom, #C5A880, #7A6B55);
+  border: 1px solid rgba(197, 168, 128, 0.2);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #D4AF37/30;
+  background: linear-gradient(to bottom, #D4B896, #C5A880);
 }
+
+
 
 /* Premium Marble & Dark Gradients */
 .bg-marble-gradient {
-  background: radial-gradient(circle at 50% 50%, #171717 0%, #111111 50%, #090909 100%);
+  background: radial-gradient(circle at 50% 50%, #0F0F11 0%, #09090A 50%, #050506 100%);
 }
 
 .bg-gold-metallic {
-  background: linear-gradient(135deg, #D4AF37 0%, #F3E5AB 30%, #E6C567 70%, #996515 100%);
+  background: linear-gradient(135deg, #C5A880 0%, #E8E4DC 30%, #D4B896 70%, #7A6B55 100%);
 }
 
 .text-gold-gradient {
-  background: linear-gradient(135deg, #D4AF37 0%, #E6C567 50%, #996515 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background: linear-gradient(135deg, #C5A880 0%, #D4B896 50%, #7A6B55 100%);
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
 }
 
 /* Glow Elements & Borders */
 .border-gold-glow {
-  border: 1px solid rgba(212, 175, 55, 0.1);
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.03);
+  border: 1px solid rgba(197, 168, 128, 0.1);
+  box-shadow: 0 0 15px rgba(197, 168, 128, 0.03);
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .border-gold-glow:hover {
-  border-color: rgba(212, 175, 55, 0.4);
-  box-shadow: 0 0 30px rgba(212, 175, 55, 0.12);
+  border-color: rgba(197, 168, 128, 0.4);
+  box-shadow: 0 0 30px rgba(197, 168, 128, 0.12);
 }
 
 /* Luxury Light Beam Effects */
 .light-shaft {
   position: absolute;
   width: 2px;
-  background: linear-gradient(to bottom, transparent, rgba(212, 175, 55, 0.15) 50%, transparent);
+  background: linear-gradient(to bottom, transparent, rgba(197, 168, 128, 0.15) 50%, transparent);
   filter: blur(1px);
   pointer-events: none;
 }
+
+/* ============================================
+   MOTIONSITES.AI UPGRADE — Animation System
+   ============================================ */
+
+/* Ambient Orb Drift — slow living background */
+@keyframes orb-drift {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  25%  { transform: translate(30px, -20px) scale(1.04); }
+  50%  { transform: translate(-15px, 25px) scale(0.97); }
+  75%  { transform: translate(20px, 10px) scale(1.02); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes orb-drift-reverse {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  25%  { transform: translate(-25px, 15px) scale(1.03); }
+  50%  { transform: translate(20px, -20px) scale(0.98); }
+  75%  { transform: translate(-10px, 8px) scale(1.01); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+/* Gold Shimmer Sweep — animated gradient text */
+@keyframes shimmer-sweep {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+
 
 /* Floating Animation Keyframes */
 @keyframes float {
@@ -99,12 +141,150 @@ body {
   100% { opacity: 0.1; }
 }
 
+/* Map pulse ring */
+@keyframes map-ping {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
 
 .animate-pulse-glow {
   animation: pulseGlow 4s ease-in-out infinite;
+}
+
+/* Ambient Orb Classes */
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(90px);
+  opacity: 0.12;
+  animation: orb-drift 18s ease-in-out infinite;
+}
+
+.ambient-orb-reverse {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(100px);
+  opacity: 0.10;
+  animation: orb-drift-reverse 22s ease-in-out infinite;
+}
+
+.ambient-orb-sm {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(60px);
+  opacity: 0.08;
+  animation: orb-drift 14s ease-in-out infinite reverse;
+}
+
+/* Shimmer Gold Text */
+.text-shimmer {
+  background: linear-gradient(
+    120deg,
+    #C5A880 0%,
+    #E8D8BC 30%,
+    #F5E8CC 45%,
+    #D4B896 55%,
+    #C5A880 70%,
+    #9A7D55 100%
+  );
+  background-size: 250% auto;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-sweep 4s linear infinite;
+  display: inline-block;
+}
+
+.text-shimmer-slow {
+  background: linear-gradient(
+    120deg,
+    #C5A880 0%,
+    #E8D8BC 35%,
+    #F5E8CC 48%,
+    #D4B896 58%,
+    #C5A880 70%,
+    #9A7D55 100%
+  );
+  background-size: 300% auto;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-sweep 7s linear infinite;
+  display: inline-block;
+}
+
+/* Section Glow Divider */
+.section-divider-glow {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(197, 168, 128, 0.04) 20%,
+    rgba(197, 168, 128, 0.25) 50%,
+    rgba(197, 168, 128, 0.04) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 0 18px rgba(197, 168, 128, 0.12);
+}
+
+/* 3D Card Tilt Container */
+.card-3d-container {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+/* Card inner glow on hover (injected via JS) */
+.card-3d:hover {
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(197, 168, 128, 0.2),
+    inset 0 0 40px rgba(197, 168, 128, 0.03);
+}
+
+/* Light Cone */
+.light-cone {
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(
+    ellipse at top,
+    rgba(197, 168, 128, 0.08) 0%,
+    rgba(197, 168, 128, 0.02) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* Map ping animation */
+.map-ping {
+  animation: map-ping 2s ease-out infinite;
+}
+
+/* Scanline micro-texture overlay */
+.scanline-overlay {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
 }
 
 /* Lenis CSS integration */
@@ -127,3 +307,53 @@ html.lenis, html.lenis body {
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }
+
+/* Centerline wire responsive gradients */
+#tension-wire {
+  stroke: url(#wire-gradient-ltr) !important;
+}
+
+[dir="rtl"] #tension-wire {
+  stroke: url(#wire-gradient-rtl) !important;
+}
+
+/* Hide Next.js default dev indicators and build watcher portals */
+#nextjs-dev-indicator,
+#__next-build-watcher,
+[data-nextjs-toast],
+nextjs-portal {
+  display: none !important;
+}
+
+/* Egyptian Styling Utilities */
+.border-egyptian {
+  border: 1px solid var(--color-gold);
+  position: relative;
+}
+.border-egyptian::before, .border-egyptian::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--color-gold);
+  transition: all 0.3s ease;
+}
+.border-egyptian::before {
+  top: -4px;
+  left: -4px;
+  border-right: none;
+  border-bottom: none;
+}
+.border-egyptian::after {
+  bottom: -4px;
+  right: -4px;
+  border-left: none;
+  border-top: none;
+}
+.bg-lapis-gradient {
+  background: linear-gradient(135deg, var(--color-lapis-dark) 0%, var(--color-bg-primary) 100%);
+}
+.text-egyptian-heading {
+  font-family: var(--font-heading);
+}
+

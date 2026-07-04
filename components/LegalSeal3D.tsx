@@ -1,329 +1,260 @@
 'use client';
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 
-// Beautiful, animated 3D Scales of Justice
+// Highly polished, high-resolution 3D Scales of Justice
 function ScalesOfJustice() {
   const groupRef = useRef<THREE.Group>(null);
   const beamRef = useRef<THREE.Group>(null);
   const leftPanRef = useRef<THREE.Group>(null);
   const rightPanRef = useRef<THREE.Group>(null);
-
-  // Keep track of positions for smooth lerping
-  const currentTilt = useRef(0);
-  const currentGroupY = useRef(0);
-  const currentGroupX = useRef(0);
+  const spotLightRef = useRef<THREE.SpotLight>(null);
 
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
-    const pointer = state.pointer; // Mouse coords normalized between -1 and 1
 
-    // 1. Smooth interactive group rotation (passive rotation + subtle mouse tilt)
-    const targetGroupY = time * 0.15 + (pointer.x * 0.35);
-    const targetGroupX = Math.sin(time * 0.08) * 0.04 - (pointer.y * 0.12);
+    // Damped proximity rotation factor (slows down near center pointer focus)
+    const dist = Math.sqrt(state.pointer.x * state.pointer.x + state.pointer.y * state.pointer.y);
+    const speedFactor = Math.max(0.05, Math.min(1.0, dist * 1.6));
 
-    currentGroupY.current = THREE.MathUtils.lerp(currentGroupY.current, targetGroupY, 0.05);
-    currentGroupX.current = THREE.MathUtils.lerp(currentGroupX.current, targetGroupX, 0.05);
-
+    // Slow elegant rotation
     if (groupRef.current) {
-      groupRef.current.rotation.y = currentGroupY.current;
-      groupRef.current.rotation.x = currentGroupX.current;
+      groupRef.current.rotation.y = time * 0.15 * speedFactor;
+      groupRef.current.rotation.x = Math.sin(time * 0.12) * 0.02;
     }
 
-    // 2. Dynamic, smooth balancing motion for the beam (passive tilt + mouse pointer influence)
-    const targetTilt = Math.sin(time * 1.2) * 0.07 + (pointer.x * 0.15);
-    currentTilt.current = THREE.MathUtils.lerp(currentTilt.current, targetTilt, 0.07);
-    const tilt = currentTilt.current;
-
+    // Smooth balancing sway
+    const tilt = Math.sin(time * 0.9) * 0.05;
     if (beamRef.current) {
       beamRef.current.rotation.z = tilt;
     }
 
-    // 3. Keep pans hanging straight down (upright) despite the beam tilting
+    // Keep pans level
     if (leftPanRef.current) {
       leftPanRef.current.rotation.z = -tilt;
     }
     if (rightPanRef.current) {
       rightPanRef.current.rotation.z = -tilt;
     }
+
+    // Key spotlight tracks cursor coordinates with damped latency
+    if (spotLightRef.current) {
+      const targetX = state.pointer.x * 4.5;
+      const targetY = state.pointer.y * 3.5 + 5.5;
+      spotLightRef.current.position.x = THREE.MathUtils.lerp(spotLightRef.current.position.x, targetX, 0.05);
+      spotLightRef.current.position.y = THREE.MathUtils.lerp(spotLightRef.current.position.y, targetY, 0.05);
+    }
   });
 
-  // Premium Luxury Materials
-  const goldMaterial = (
-    <meshPhysicalMaterial
-      color="#E6C567" // Luxurious warm gold
-      metalness={0.96}
-      roughness={0.12}
-      clearcoat={1.0}
-      clearcoatRoughness={0.06}
-      reflectivity={0.95}
-      emissive="#B58D20"
-      emissiveIntensity={0.06}
-    />
-  );
+  // Clean gold material – polished satin brass
+  const goldProps = {
+    color: '#C5A880',
+    metalness: 0.92,
+    roughness: 0.18,
+    emissive: '#C5A880' as const,
+    emissiveIntensity: 0.03,
+  };
 
-  const lightGoldMaterial = (
-    <meshPhysicalMaterial
-      color="#F3D075" // Shiniest accent gold
-      metalness={0.96}
-      roughness={0.08}
-      clearcoat={1.0}
-      clearcoatRoughness={0.04}
-      reflectivity={0.95}
-    />
-  );
+  const brightGoldProps = {
+    color: '#D4B896',
+    metalness: 0.95,
+    roughness: 0.12,
+    emissive: '#C5A880' as const,
+    emissiveIntensity: 0.02,
+  };
 
-  const lightGoldMaterialDouble = (
-    <meshPhysicalMaterial
-      color="#F3D075"
-      metalness={0.95}
-      roughness={0.12}
-      clearcoat={1.0}
-      clearcoatRoughness={0.08}
-      reflectivity={0.9}
-      side={THREE.DoubleSide} // Needed for open thin bowls
-    />
-  );
-
-  const darkBaseMaterial = (
-    <meshPhysicalMaterial
-      color="#151515" // Polished black obsidian
-      roughness={0.15}
-      metalness={0.2}
-      clearcoat={1.0}
-      clearcoatRoughness={0.1}
-    />
-  );
-
-  const woodMaterial = (
-    <meshPhysicalMaterial
-      color="#653517" // Rich mahogany wood
-      roughness={0.25}
-      metalness={0.1}
-      clearcoat={0.8}
-      clearcoatRoughness={0.2}
-    />
-  );
+  const darkProps = {
+    color: '#0D0D0E',
+    metalness: 0.8,
+    roughness: 0.3,
+  };
 
   return (
-    <group ref={groupRef} position={[0, -1.05, 0]}>
-      {/* ================= 1. PEDESTAL BASE ================= */}
-      {/* Bottom Gold Accent Rim */}
-      <mesh position={[0, 0.02, 0]}>
-        <cylinderGeometry args={[0.72, 0.75, 0.04, 32]} />
-        {goldMaterial}
+    <group ref={groupRef} position={[0, -0.65, 0]} scale={1.05}>
+      <spotLight
+        ref={spotLightRef}
+        position={[0, 6, 2.5]}
+        intensity={3.5}
+        angle={0.35}
+        penumbra={1}
+        color="#D4B896"
+      />
+
+      {/* ===== pedestal / base ===== */}
+      {/* Stepped Base 1 (Bottom Tier) */}
+      <mesh position={[0, 0, 0]}>
+        <cylinderGeometry args={[0.65, 0.7, 0.08, 64]} />
+        <meshStandardMaterial {...darkProps} />
       </mesh>
-      {/* Main Obsidian Stone Pedestal */}
-      <mesh position={[0, 0.1, 0]}>
-        <cylinderGeometry args={[0.65, 0.7, 0.12, 32]} />
-        {darkBaseMaterial}
+      {/* Stepped Base 2 (Middle Tier) */}
+      <mesh position={[0, 0.06, 0]}>
+        <cylinderGeometry args={[0.55, 0.58, 0.04, 64]} />
+        <meshStandardMaterial {...brightGoldProps} />
       </mesh>
-      {/* Top Gold Polished Plate */}
-      <mesh position={[0, 0.17, 0]}>
-        <cylinderGeometry args={[0.6, 0.6, 0.02, 32]} />
-        {lightGoldMaterial}
-      </mesh>
-      {/* Center Pillar Support Ring */}
-      <mesh position={[0, 0.22, 0]}>
-        <cylinderGeometry args={[0.14, 0.16, 0.08, 16]} />
-        {goldMaterial}
+      {/* Stepped Base 3 (Top Tier) */}
+      <mesh position={[0, 0.09, 0]}>
+        <cylinderGeometry args={[0.45, 0.47, 0.03, 64]} />
+        <meshStandardMaterial {...goldProps} />
       </mesh>
 
-      {/* ================= 2. VERTICAL PILLAR ================= */}
-      {/* Column Lower Shaft */}
-      <mesh position={[0, 0.6, 0]}>
-        <cylinderGeometry args={[0.06, 0.08, 0.7, 16]} />
-        {goldMaterial}
+      {/* ===== central pillar ===== */}
+      <mesh position={[0, 0.9, 0]}>
+        <cylinderGeometry args={[0.032, 0.048, 1.6, 64]} />
+        <meshStandardMaterial {...goldProps} />
       </mesh>
-      {/* Lower Collar */}
-      <mesh position={[0, 0.95, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.09, 0.025, 8, 24]} />
-        {lightGoldMaterial}
+      {/* Pillar Collar base */}
+      <mesh position={[0, 0.15, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.06, 0.015, 16, 64]} />
+        <meshStandardMaterial {...brightGoldProps} />
       </mesh>
-      {/* Column Main Shaft */}
-      <mesh position={[0, 1.5, 0]}>
-        <cylinderGeometry args={[0.045, 0.06, 1.1, 16]} />
-        {goldMaterial}
+      {/* Pillar Center sphere detail */}
+      <mesh position={[0, 0.9, 0]}>
+        <sphereGeometry args={[0.07, 32, 32]} />
+        <meshStandardMaterial {...brightGoldProps} />
       </mesh>
-      {/* Top Collar */}
-      <mesh position={[0, 2.05, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.08, 0.02, 8, 24]} />
-        {lightGoldMaterial}
-      </mesh>
-      {/* Top Capital Hub */}
-      <mesh position={[0, 2.15, 0]}>
-        <cylinderGeometry args={[0.08, 0.07, 0.12, 16]} />
-        {goldMaterial}
-      </mesh>
-      {/* Top Spherical Crown Ornament */}
-      <mesh position={[0, 2.26, 0]}>
-        <sphereGeometry args={[0.1, 16, 16]} />
-        {lightGoldMaterial}
+      {/* Pillar Collar top */}
+      <mesh position={[0, 1.62, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.05, 0.012, 16, 64]} />
+        <meshStandardMaterial {...brightGoldProps} />
       </mesh>
 
-      {/* ================= 3. TILTING HORIZONTAL BEAM ================= */}
-      <group ref={beamRef} position={[0, 2.15, 0]}>
-        {/* Central Pivot Cover Cap */}
-        <mesh position={[0, 0, 0.06]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.07, 0.07, 0.03, 16]} />
-          {lightGoldMaterial}
+      {/* ===== top crown ornament ===== */}
+      <mesh position={[0, 1.74, 0]}>
+        <sphereGeometry args={[0.065, 32, 32]} />
+        <meshStandardMaterial {...brightGoldProps} />
+      </mesh>
+      {/* Crown spire tip */}
+      <mesh position={[0, 1.83, 0]}>
+        <cylinderGeometry args={[0.002, 0.02, 0.1, 16]} />
+        <meshStandardMaterial {...brightGoldProps} />
+      </mesh>
+
+      {/* ===== horizontal beam (tapers at ends) ===== */}
+      <group ref={beamRef} position={[0, 1.68, 0]}>
+        {/* Left taper beam */}
+        <mesh position={[-0.5, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.02, 0.01, 1.0, 32]} />
+          <meshStandardMaterial {...goldProps} />
         </mesh>
-        
-        {/* Main Tapered Horizontal Beam */}
-        <mesh rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.02, 0.035, 2.4, 16]} />
-          {goldMaterial}
-        </mesh>
-        
-        {/* Decorative rings on left and right sides of the beam */}
-        <mesh position={[-0.6, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
-          <torusGeometry args={[0.04, 0.015, 8, 16]} />
-          {lightGoldMaterial}
-        </mesh>
-        <mesh position={[0.6, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
-          <torusGeometry args={[0.04, 0.015, 8, 16]} />
-          {lightGoldMaterial}
+        {/* Right taper beam */}
+        <mesh position={[0.5, 0, 0]} rotation={[0, 0, -Math.PI / 2]}>
+          <cylinderGeometry args={[0.02, 0.01, 1.0, 32]} />
+          <meshStandardMaterial {...goldProps} />
         </mesh>
 
-        {/* Outer Beam Knobs */}
-        <mesh position={[-1.2, 0, 0]}>
-          <sphereGeometry args={[0.06, 12, 12]} />
-          {lightGoldMaterial}
-        </mesh>
-        <mesh position={[1.2, 0, 0]}>
-          <sphereGeometry args={[0.06, 12, 12]} />
-          {lightGoldMaterial}
+        {/* Decorative central collar */}
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <torusGeometry args={[0.028, 0.012, 16, 32]} />
+          <meshStandardMaterial {...brightGoldProps} />
         </mesh>
 
-        {/* ================= LEFT SCALE PAN ASSEMBLY ================= */}
-        <group ref={leftPanRef} position={[-1.2, 0, 0]}>
-          {/* Hanger Ring */}
-          <mesh position={[0, -0.04, 0]} rotation={[0, Math.PI / 2, 0]}>
-            <torusGeometry args={[0.045, 0.01, 8, 16]} />
-            {lightGoldMaterial}
-          </mesh>
+        {/* End caps spheres */}
+        <mesh position={[-1.0, 0, 0]}>
+          <sphereGeometry args={[0.038, 24, 24]} />
+          <meshStandardMaterial {...brightGoldProps} />
+        </mesh>
+        <mesh position={[1.0, 0, 0]}>
+          <sphereGeometry args={[0.038, 24, 24]} />
+          <meshStandardMaterial {...brightGoldProps} />
+        </mesh>
 
-          {/* 3 hanging support chains/rods in 3D triangular spacing */}
-          {[0, (Math.PI * 2) / 3, (Math.PI * 4) / 3].map((angle, idx) => (
-            <group key={idx} rotation={[0, angle, 0]}>
-              <mesh position={[0.16, -0.345, 0]} rotation={[0, 0, -0.48]}>
-                <cylinderGeometry args={[0.007, 0.007, 0.69, 6]} />
-                {goldMaterial}
+        {/* ===== left hanging pan assembly ===== */}
+        <group ref={leftPanRef} position={[-1.0, 0, 0]}>
+          {/* Triple-chain suspension threads */}
+          {[0, 120, 240].map((angle, idx) => (
+            <group key={idx} rotation={[0, (angle * Math.PI) / 180, 0]}>
+              <mesh position={[0.13, -0.275, 0]} rotation={[0, 0, 0.46]}>
+                <cylinderGeometry args={[0.003, 0.003, 0.61, 8]} />
+                <meshStandardMaterial {...goldProps} />
               </mesh>
             </group>
           ))}
 
-          {/* Scale Pan Dish (Concave Bowl) */}
-          <mesh position={[0, -0.65, 0]} rotation={[Math.PI, 0, 0]}>
-            <sphereGeometry args={[0.35, 32, 16, 0, Math.PI * 2, 0, 0.3]} />
-            {lightGoldMaterialDouble}
+          {/* Pan dish - Beveled rim plate */}
+          <mesh position={[0, -0.55, 0]}>
+            <cylinderGeometry args={[0.26, 0.26, 0.012, 64]} />
+            <meshStandardMaterial {...brightGoldProps} />
           </mesh>
-          
-          {/* Gavel (representing Law/Authority) resting on Left Pan */}
-          <group position={[0, -0.63, 0]} rotation={[0.2, 0.4, 0.15]}>
-            {/* Gavel Head */}
-            <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.045, 0.045, 0.15, 16]} />
-              {woodMaterial}
+          <mesh position={[0, -0.542, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.26, 0.008, 12, 64]} />
+            <meshStandardMaterial {...goldProps} />
+          </mesh>
+
+          {/* Detailed Gavel resting on pan */}
+          <group position={[0, -0.52, 0]} rotation={[0.2, 0.6, 0]}>
+            {/* Gavel head */}
+            <mesh rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.025, 0.025, 0.12, 24]} />
+              <meshStandardMaterial color="#3E1F0A" roughness={0.4} />
             </mesh>
-            {/* Gavel Metal Bands on Head */}
-            <mesh position={[0, 0.05, 0]} rotation={[Math.PI / 2, 0, 0]}>
-              <torusGeometry args={[0.047, 0.005, 8, 16]} />
-              {lightGoldMaterial}
+            {/* Gold accents on head */}
+            <mesh position={[0, 0, 0.045]} rotation={[Math.PI / 2, 0, 0]}>
+              <torusGeometry args={[0.026, 0.004, 8, 24]} />
+              <meshStandardMaterial {...brightGoldProps} />
             </mesh>
-            <mesh position={[0, -0.05, 0]} rotation={[Math.PI / 2, 0, 0]}>
-              <torusGeometry args={[0.047, 0.005, 8, 16]} />
-              {lightGoldMaterial}
+            <mesh position={[0, 0, -0.045]} rotation={[Math.PI / 2, 0, 0]}>
+              <torusGeometry args={[0.026, 0.004, 8, 24]} />
+              <meshStandardMaterial {...brightGoldProps} />
             </mesh>
-            {/* Gavel Handle */}
-            <mesh position={[0, -0.01, -0.11]} rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.012, 0.009, 0.22, 12]} />
-              {woodMaterial}
+            {/* Gavel shaft */}
+            <mesh position={[0, -0.005, -0.1]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.009, 0.006, 0.12, 12]} />
+              <meshStandardMaterial color="#3E1F0A" roughness={0.4} />
             </mesh>
           </group>
         </group>
 
-        {/* ================= RIGHT SCALE PAN ASSEMBLY ================= */}
-        <group ref={rightPanRef} position={[1.2, 0, 0]}>
-          {/* Hanger Ring */}
-          <mesh position={[0, -0.04, 0]} rotation={[0, Math.PI / 2, 0]}>
-            <torusGeometry args={[0.045, 0.01, 8, 16]} />
-            {lightGoldMaterial}
-          </mesh>
-
-          {/* 3 hanging support chains/rods in 3D triangular spacing */}
-          {[0, (Math.PI * 2) / 3, (Math.PI * 4) / 3].map((angle, idx) => (
-            <group key={idx} rotation={[0, angle, 0]}>
-              <mesh position={[0.16, -0.345, 0]} rotation={[0, 0, -0.48]}>
-                <cylinderGeometry args={[0.007, 0.007, 0.69, 6]} />
-                {goldMaterial}
+        {/* ===== right hanging pan assembly ===== */}
+        <group ref={rightPanRef} position={[1.0, 0, 0]}>
+          {/* Triple-chain suspension threads */}
+          {[0, 120, 240].map((angle, idx) => (
+            <group key={idx} rotation={[0, (angle * Math.PI) / 180, 0]}>
+              <mesh position={[0.13, -0.275, 0]} rotation={[0, 0, 0.46]}>
+                <cylinderGeometry args={[0.003, 0.003, 0.61, 8]} />
+                <meshStandardMaterial {...goldProps} />
               </mesh>
             </group>
           ))}
 
-          {/* Scale Pan Dish (Concave Bowl) */}
-          <mesh position={[0, -0.65, 0]} rotation={[Math.PI, 0, 0]}>
-            <sphereGeometry args={[0.35, 32, 16, 0, Math.PI * 2, 0, 0.3]} />
-            {lightGoldMaterialDouble}
+          {/* Pan dish - Beveled rim plate */}
+          <mesh position={[0, -0.55, 0]}>
+            <cylinderGeometry args={[0.26, 0.26, 0.012, 64]} />
+            <meshStandardMaterial {...brightGoldProps} />
           </mesh>
-          
-          {/* Rolled Legal Scroll resting on Right Pan */}
-          <group position={[0, -0.63, 0]} rotation={[-0.15, -0.45, 0.05]}>
-            {/* Spindle Rod in the center */}
-            <mesh rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.008, 0.008, 0.26, 8]} />
-              {lightGoldMaterial}
+          <mesh position={[0, -0.542, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <torusGeometry args={[0.26, 0.008, 12, 64]} />
+            <meshStandardMaterial {...goldProps} />
+          </mesh>
+
+          {/* Detailed Legal Codex resting on pan */}
+          <group position={[0, -0.52, 0]} rotation={[0, 0.4, 0]}>
+            {/* Cover */}
+            <mesh>
+              <boxGeometry args={[0.12, 0.038, 0.16]} />
+              <meshStandardMaterial color="#112217" roughness={0.5} />
             </mesh>
-            {/* Spindle Caps */}
-            <mesh position={[0, 0, 0.13]}>
-              <sphereGeometry args={[0.015, 8, 8]} />
-              {lightGoldMaterial}
+            {/* Pages insert */}
+            <mesh position={[0.004, 0, 0]}>
+              <boxGeometry args={[0.11, 0.028, 0.14]} />
+              <meshStandardMaterial color="#E8E4DC" roughness={0.7} />
             </mesh>
-            <mesh position={[0, 0, -0.13]}>
-              <sphereGeometry args={[0.015, 8, 8]} />
-              {lightGoldMaterial}
-            </mesh>
-            {/* Paper Scroll Cylinder */}
-            <mesh rotation={[Math.PI / 2, 0, 0]}>
-              <cylinderGeometry args={[0.038, 0.038, 0.22, 12]} />
-              <meshPhysicalMaterial
-                color="#F8F3E5" // Aged luxury parchment
-                roughness={0.55}
-                clearcoat={0.1}
-              />
-            </mesh>
-            {/* Scroll Ribbon Tie */}
-            <mesh rotation={[Math.PI / 2, 0, 0]}>
-              <torusGeometry args={[0.04, 0.007, 8, 16]} />
-              <meshPhysicalMaterial
-                color="#B22222" // Deep Crimson Ribbon
-                roughness={0.4}
-                metalness={0.1}
-              />
+            {/* Cover gold emblem decoration */}
+            <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+              <circleGeometry args={[0.02, 16]} />
+              <meshStandardMaterial {...brightGoldProps} />
             </mesh>
           </group>
         </group>
       </group>
-
-      {/* Pedestal Shadow/Glow Disc for anchoring base */}
-      <mesh position={[0, -0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.75, 1.4, 64]} />
-        <meshBasicMaterial
-          color="#D4AF37"
-          transparent
-          opacity={0.03}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
     </group>
   );
 }
 
-// Glowing Particle Field (Floating embers) surrounding the scale
-function Particles({ count = 120 }) {
+// Floating gold particle dust
+function Particles({ count = 80 }) {
   const points = useRef<THREE.Points>(null);
 
   const [positions] = useState(() => {
@@ -331,21 +262,18 @@ function Particles({ count = 120 }) {
     for (let i = 0; i < count; i++) {
       const theta = THREE.MathUtils.randFloat(0, Math.PI * 2);
       const phi = THREE.MathUtils.randFloat(0, Math.PI);
-      const distance = THREE.MathUtils.randFloat(1.3, 3.3);
-      
+      const distance = THREE.MathUtils.randFloat(1.4, 2.8);
+
       arr[i * 3] = distance * Math.sin(phi) * Math.cos(theta);
-      arr[i * 3 + 1] = distance * Math.sin(phi) * Math.sin(theta) + 0.25; // Centered vertically around the scales
+      arr[i * 3 + 1] = distance * Math.sin(phi) * Math.sin(theta) + 0.1;
       arr[i * 3 + 2] = distance * Math.cos(phi);
     }
     return arr;
   });
 
   useFrame((state) => {
-    const time = state.clock.getElapsedTime();
     if (points.current) {
-      points.current.rotation.y = time * 0.035;
-      points.current.rotation.x = Math.sin(time * 0.06) * 0.03;
-      points.current.rotation.z = Math.cos(time * 0.04) * 0.03;
+      points.current.rotation.y = state.clock.getElapsedTime() * 0.03;
     }
   });
 
@@ -358,16 +286,31 @@ function Particles({ count = 120 }) {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.045}
-        color="#F4D279"
+        size={0.035}
+        color="#D4B896"
         transparent
-        opacity={0.7}
+        opacity={0.4}
         sizeAttenuation
         depthWrite={false}
-        blending={THREE.AdditiveBlending}
       />
     </points>
   );
+}
+
+// Interactive cursor highlight pointlight
+function CursorPointLight() {
+  const lightRef = useRef<THREE.PointLight>(null);
+  
+  useFrame((state) => {
+    if (lightRef.current) {
+      const targetX = state.pointer.x * 2.2;
+      const targetY = state.pointer.y * 2.2 + 0.3;
+      lightRef.current.position.x = THREE.MathUtils.lerp(lightRef.current.position.x, targetX, 0.08);
+      lightRef.current.position.y = THREE.MathUtils.lerp(lightRef.current.position.y, targetY, 0.08);
+    }
+  });
+
+  return <pointLight ref={lightRef} position={[0, 0.3, 1.2]} intensity={1.8} color="#D4B896" distance={3.2} decay={1.8} />;
 }
 
 export default function LegalSeal3D() {
@@ -378,11 +321,10 @@ export default function LegalSeal3D() {
   }, []);
 
   if (!isClient) {
-    // Elegant luxury Scales of Justice placeholder for SSR
     return (
       <div className="w-full h-full flex items-center justify-center relative">
-        <div className="absolute w-[280px] h-[280px] rounded-full border border-[#D4AF37]/20 flex items-center justify-center animate-[spin_100s_linear_infinite]">
-          <svg className="w-full h-full text-[#D4AF37]/40" viewBox="0 0 100 100">
+        <div className="absolute w-[240px] h-[240px] rounded-full border border-[#C5A880]/15 flex items-center justify-center animate-[spin_100s_linear_infinite]">
+          <svg className="w-full h-full text-[#C5A880]/30" viewBox="0 0 100 100">
             <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" strokeWidth="0.5" strokeDasharray="3 3" />
             <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="1" />
             <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.25" />
@@ -400,76 +342,42 @@ export default function LegalSeal3D() {
             ))}
           </svg>
         </div>
-        <div className="absolute w-[180px] h-[180px] rounded-full border border-[#D4AF37] bg-[#111111] shadow-[0_0_50px_rgba(212,175,55,0.15)] flex items-center justify-center">
-          <ScaleIcon className="w-16 h-16 text-[#D4AF37] animate-[pulse_4s_infinite]" />
-        </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full h-full min-h-[300px] md:min-h-[450px]">
-      <Canvas eventSource={typeof document !== 'undefined' ? document.getElementById('root') || undefined : undefined}>
-        {/* Adjusted Camera Position: slightly higher and closer, creating a nice downward perspective to show the gavel & scroll inside the pans */}
-        <PerspectiveCamera makeDefault position={[0, 0.35, 3.0]} fov={45} />
-        
-        {/* Professional 4-Point Cinematic Lighting Rig */}
-        <ambientLight intensity={0.25} />
-        
-        {/* 1. Golden Key Light */}
-        <directionalLight position={[-4, 5, 4]} intensity={2.2} color="#F3D075" />
-        
-        {/* 2. Soft Blue Fill Light (for luxury color depth) */}
-        <directionalLight position={[4, 3, 2]} intensity={1.2} color="#8ab4f8" />
-        
-        {/* 3. Rim Light (White, from behind to highlight metallic edges) */}
-        <directionalLight position={[0, 4, -6]} intensity={3.5} color="#ffffff" />
-        
-        {/* 4. Bottom Ambient bounce light */}
-        <directionalLight position={[0, -4, 0]} intensity={0.4} color="#D4AF37" />
+    <div className="w-full h-full min-h-[300px] md:min-h-[500px] relative">
+      <div className="absolute inset-0">
+        <Canvas
+          dpr={[1, 1.5]}
+          gl={{ antialias: false, powerPreference: 'high-performance' }}
+          performance={{ min: 0.5 }}
+          className="outline-none focus:outline-none"
+          style={{ outline: 'none', pointerEvents: 'auto' }}
+        >
+          <PerspectiveCamera makeDefault position={[0, 0.2, 4.0]} fov={42} />
 
-        {/* 5. Spotlight on the pedestal */}
-        <spotLight position={[0, 7, 1]} intensity={2.5} angle={0.4} penumbra={1} color="#E6C567" />
+          {/* Ambient & Directed Lighting Setup */}
+          <ambientLight intensity={0.45} />
+          <directionalLight position={[4, 5, 4]} intensity={2.2} color="#FFFFFF" />
+          <directionalLight position={[-4, 3, -3]} intensity={0.6} color="#C5A880" />
+          <pointLight position={[0, -2, 3]} intensity={0.4} color="#C5A880" />
 
-        {/* Image environment reflections (standard preset for hyper-realistic gold reflections) */}
-        <Environment preset="city" />
+          {/* High Resolution Models */}
+          <ScalesOfJustice />
+          <Particles count={80} />
+          <CursorPointLight />
 
-        {/* 3D Elements */}
-        <ScalesOfJustice />
-        <Particles count={120} />
-
-        {/* Interaction controls constrained to keep model cinematic */}
-        <OrbitControls
-          enableZoom={false}
-          enablePan={false}
-          minPolarAngle={Math.PI / 2.5}
-          maxPolarAngle={Math.PI / 1.6}
-        />
-      </Canvas>
+          {/* Controls */}
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+            minPolarAngle={Math.PI / 2.3}
+            maxPolarAngle={Math.PI / 1.7}
+          />
+        </Canvas>
+      </div>
     </div>
-  );
-}
-
-// Custom inline SVG ScaleIcon for fallback / SSR
-function ScaleIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" />
-      <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z" />
-      <path d="M7 21h10" />
-      <path d="M12 3v18" />
-      <path d="M3 7h18" />
-    </svg>
   );
 }

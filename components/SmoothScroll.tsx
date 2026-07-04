@@ -1,13 +1,15 @@
 'use client';
 
-import { ReactNode, useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import LoadingScreen from './LoadingScreen';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll({ children }: { children: ReactNode }) {
+  const [isLoading, setIsLoading] = useState(true);
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
@@ -23,19 +25,41 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     // Connect Lenis to ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
 
-    gsap.ticker.add((time) => {
+    const rafHandler = (time: number) => {
       lenis.raf(time * 1000);
-    });
-
+    };
+    
+    gsap.ticker.add(rafHandler);
     gsap.ticker.lagSmoothing(0);
+
+    // Synchronize Lenis state with Loading Screen
+    if (isLoading) {
+      lenis.stop();
+    } else {
+      lenis.start();
+    }
 
     return () => {
       lenis.destroy();
-      gsap.ticker.remove((time) => {
-        lenis.raf(time * 1000);
-      });
+      gsap.ticker.remove(rafHandler);
     };
-  }, []);
+  }, [isLoading]);
 
-  return <>{children}</>;
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+    // Dispatches a global event that components (like Hero and Navbar) can listen to 
+    // to kick off their post-loading entrance sequences synchronously.
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('vault-opened'));
+    }
+  };
+
+  return (
+    <>
+      {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
+      <div style={{ opacity: isLoading ? 0 : 1, transition: 'opacity 0.8s ease-out' }}>
+        {children}
+      </div>
+    </>
+  );
 }

@@ -9,7 +9,7 @@ const withNextIntl = createNextIntlPlugin(
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   // R3F and Three.js package configurations for Transpile
-  transpilePackages: ['three']
+  transpilePackages: ['three'],
 };
 
 export default withNextIntl(nextConfig);
