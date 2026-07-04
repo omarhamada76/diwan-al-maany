@@ -101,7 +101,7 @@ export default function Navbar({ locale }: NavbarProps) {
       aria-label="Main navigation"
     >
       {/* Symmetrical Split Layout Grid */}
-      <div className="max-w-[1440px] mx-auto px-8 lg:px-[80px] flex items-center justify-between relative">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-8 lg:px-[80px] flex items-center justify-between relative">
         
         {/* DESKTOP LEFT LINKS + LANGUAGE SWITCHER */}
         <div className="hidden lg:flex items-center gap-8 flex-1 nav-anim-item">
@@ -127,8 +127,8 @@ export default function Navbar({ locale }: NavbarProps) {
         </div>
 
         {/* CENTER DOCK TARGET (Empty gold guidelines for WebGL Seal docking) */}
-        <div className="flex items-center justify-center z-50 nav-anim-item px-4">
-          <Link href="/#top" id="navbar-dock-target" className="w-12 h-12 flex items-center justify-center relative group" aria-label="Return to top">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-50 nav-anim-item pointer-events-none">
+          <Link href="/#top" id="navbar-dock-target" className="w-12 h-12 flex items-center justify-center relative group pointer-events-auto" aria-label="Return to top">
             {/* Ambient rest ring visual target */}
             <div className="absolute inset-0 rounded-full border border-[#C5A880]/15 scale-95 transition-all duration-500 group-hover:scale-105 group-hover:border-[#C5A880]/40" />
             <div className="absolute w-1.5 h-1.5 rounded-full bg-[#C5A880]/30 group-hover:bg-[#C5A880] transition-colors duration-300" />
