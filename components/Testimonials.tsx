@@ -43,7 +43,7 @@ export default function Testimonials({ locale }: TestimonialsProps) {
         <div className="absolute inset-0 bg-grain opacity-[0.02] mix-blend-overlay pointer-events-none z-0" />
 
         {/* Section Header */}
-        <div className="absolute top-[12vh] left-[80px] z-20 max-w-xl text-left">
+        <div className="absolute top-[12vh] left-6 md:left-[80px] z-20 max-w-xl text-left">
           <motion.span 
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -63,14 +63,14 @@ export default function Testimonials({ locale }: TestimonialsProps) {
         </div>
 
         {/* Huge watermarked quotation marks behind scroll */}
-        <div className="absolute right-12 top-[10%] font-serif text-[18rem] md:text-[24rem] font-bold text-[#7A6B55]/5 leading-none select-none pointer-events-none">
+        <div className="absolute right-12 top-[10%] font-serif text-[10rem] md:text-[24rem] font-bold text-[#7A6B55]/5 leading-none select-none pointer-events-none">
           ”
         </div>
 
         {/* Horizontal Slider track */}
         <motion.div 
           style={{ x: xTranslation }}
-          className="flex items-center gap-12 pl-[80px] pr-[120px] pt-[15vh] w-max z-10"
+          className="flex items-center gap-6 md:gap-12 pl-6 md:pl-[80px] pr-6 md:pr-[120px] pt-[15vh] w-max z-10"
         >
           {testimonials.map((item, index) => {
             const quote = locale === 'ar' ? item.quoteAr : item.quoteEn;
@@ -133,7 +133,7 @@ export default function Testimonials({ locale }: TestimonialsProps) {
         </motion.div>
 
         {/* Scroll Progress indicator at bottom */}
-        <div className="absolute bottom-[10vh] left-[80px] right-[80px] h-[1px] bg-[#7A6B55]/15 z-20">
+        <div className="absolute bottom-[10vh] left-6 md:left-[80px] right-6 md:right-[80px] h-[1px] bg-[#7A6B55]/15 z-20">
           <motion.div 
             style={{ scaleX: scrollYProgress, originX: 0 }}
             className="h-full bg-[#C5A880] shadow-[0_0_8px_#C5A880]"

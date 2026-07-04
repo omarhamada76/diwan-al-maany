@@ -394,7 +394,7 @@ export default function Hero() {
           >
             <div
               ref={sealContainerRef}
-              className="w-full max-w-[460px] h-[440px] relative"
+              className="w-full max-w-[460px] h-[300px] md:h-[440px] relative"
             >
               <div
                 id="seal-hover-wrapper"
